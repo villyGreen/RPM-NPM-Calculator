@@ -1,65 +1,18 @@
-GtkWindow {
-    background-color: magenta;
+#clearButton{
+    color: red;
 }
 
-GtkButton {
-    background-image: none;
+#graphButton{
+	color: blue;
 }
 
-#myGrid {
-    background-color: cyan;
-    border-style: solid;
-    border-color: black;
-    border-width: 1px;
-}
-
-#myChildTop {
-    background-color: white;
-}
-
-#myButton_red{
-    background-color: red;
-    color: white;
-    font-family: DejaVu Sans;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    border-radius: 15px;
-}
-
-#myButton_yellow{
-    background-color: yellow;
-    color: white;
-    font-family: DejaVu Sans;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    border-radius: 15px;
-}
-
-#myButton_green{
-    background-color: green;
-    color: white;
-    font-family: DejaVu Sans;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    border-radius: 15px;
-}
-
-#myButton_blue{
-    background-color: blue;
-    color: white;
-    font-family: DejaVu Sans;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    border-radius: 15px;
-}
-
-#myButton_red:hover,
-#myButton_yellow:hover,
-#myButton_green:hover,
-#myButton_blue:hover{
-   background-color: black;
+#mainLabel{
+	font-family: Gill Sans;
+	color: #0CB634;
+	background-color: #D8D8D8;
+	font-size: 14px;
+	font-weight: 300;
+	border-color: red;
+	border-radius: 5px;
+	border: 1px solid #B2AEAE;
 }

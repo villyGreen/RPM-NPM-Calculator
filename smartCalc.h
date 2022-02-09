@@ -9,7 +9,6 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-
 typedef enum {
     IS_NORMAL = 0,
     IS_EMPTY_FEEL = 1,
@@ -49,7 +48,8 @@ typedef struct {
 
 // Model
 charactersSet validator(char * searhString, int point);
-// int  isValue(char num, charactersSet set, char * serch) 
+double calculator (char * searchString, int point, charactersSet set);
+bool isValue(char  ch);
 
 // View
 void init(int argc, char *argv[]);
@@ -62,11 +62,13 @@ void setupNumberButtonsTarget(GtkWidget * button);
 void buttonNumberClicked(GtkWidget * button);
 void updateLabel(GtkWidget * label, char * text);
 void clearAllSearchString();
-char * fillString(char * input, int *point);
+void fillString(const char * input, int *point);
 void setupSpecButtonssTargets(GtkWidget * button);
 void setupSignButtonsTargets(GtkWidget * button);
 void specButtonClicked(GtkWidget * button);
 void buttonSignClicked(GtkWidget * button);
 void equalButtonClicked();
+void setGraph(GtkWidget * button);
+void myCSS(void);
 
 #endif  // SRC_S21_SMARTCALC_H_

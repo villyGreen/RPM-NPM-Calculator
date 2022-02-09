@@ -5,9 +5,10 @@ GtkWidget *mainLabel;
 GtkWidget *window;
 GtkWidget *fixed;
 GtkWidget * numberButtons[12];
-GtkWidget * specButtons[9];
-GtkWidget * signButtons[8];
+GtkWidget * specButtons[10];
+GtkWidget * signButtons[7];
 GtkWidget * equalButton;
+GtkWidget * graphButton;
 GtkWidget * clearButton;
 int point = 0;
 
@@ -21,8 +22,9 @@ void init(int argc, char *argv[]) {
     
     // MARK: - Window
     gtk_init(&argc, &argv);
+    myCSS();
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_widget_set_size_request(GTK_WIDGET(window),600,270);
+    gtk_widget_set_size_request(GTK_WIDGET(window),580,270);
     gtk_window_set_title(GTK_WINDOW(window), "Smart Calc");
     
     // MARK: - Fixed
@@ -54,9 +56,13 @@ void init(int argc, char *argv[]) {
         setupConstraints(specX,specY,specButtons[i],fixed);
         specX += 63;
     }
+    gtk_widget_set_size_request(specButtons[9], 60, 30);
+    setupSpecButtonssTargets(specButtons[9]);
+    setupConstraints(411,116,specButtons[9],fixed);
+    
     // MARK: - sign buttons
     createSignButtons(signButtons);
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 7; i++) {
         gtk_widget_set_size_request(signButtons[i], 30, 30);
         
         if (i%3 == 0) {
@@ -75,15 +81,25 @@ void init(int argc, char *argv[]) {
     
     // MARK: - clearButton
     clearButton = gtk_button_new_with_label("AC");
-    gtk_fixed_put (GTK_FIXED (fixed), clearButton, 472, 116);
+    gtk_fixed_put (GTK_FIXED (fixed), clearButton, 474, 116);
     gtk_widget_set_size_request(clearButton, 95, 30);
     g_signal_connect(G_OBJECT(clearButton), "clicked", G_CALLBACK(clearAllSearchString), NULL);
+    gtk_widget_set_name(clearButton, "clearButton");
+    
+    
+    // MARK: - graphButton
+    graphButton = gtk_button_new_with_label("f(x)");
+    gtk_fixed_put (GTK_FIXED (fixed), graphButton, 516, 152);
+    gtk_widget_set_size_request(graphButton, 53, 70);
+    g_signal_connect(G_OBJECT(graphButton), "clicked", G_CALLBACK(setGraph), NULL);
+    gtk_widget_set_name(graphButton, "graphButton");
     
     // MARK: - Label
     mainLabel = gtk_label_new(" ");
-    gtk_label_set_xalign (mainLabel, 0.0);
-    gtk_fixed_put (GTK_FIXED (fixed), mainLabel, 20, 50);
-    gtk_widget_set_size_request(mainLabel, 514, 50);
+    gtk_label_set_xalign ((GtkLabel*)mainLabel, 0.02);
+    gtk_fixed_put (GTK_FIXED (fixed), mainLabel, 10, 12);
+    gtk_widget_set_size_request(mainLabel, 558, 95);
+    gtk_widget_set_name(mainLabel, "mainLabel");
     gtk_widget_show_all(GTK_WIDGET(window));
     gtk_main();
 }
@@ -100,18 +116,18 @@ void createNumButtons(GtkWidget ** buttons) {
 }
 
 void createFunctionButtons(GtkWidget ** buttons) {
-    char * specButtons[9] = {"acos","asin","atan","cos","sin","tan","sqrt","ln","log"};
+    char * specButtons[10] = {"acos","asin","atan","cos","sin","tan","sqrt","ln","log","mod"};
     GtkWidget * button;
-    for (int i = 0;i < 9;i++) {
+    for (int i = 0;i < 10;i++) {
         button = gtk_button_new_with_label(specButtons[i]);
         buttons[i] = button;
     }
 }
 
 void createSignButtons(GtkWidget ** buttons) {
-    char * sign[8] = {"(",")","+","-","*","/","^","mod"};
+    char * sign[7] = {"(",")","+","-","*","/","^"};
     GtkWidget * button;
-    for (int i = 0;i < 8;i++) {
+    for (int i = 0;i < 7;i++) {
         button = gtk_button_new_with_label(sign[i]);
         buttons[i] = button;
     }
@@ -143,16 +159,20 @@ void equalButtonClicked() {
     charactersSet set;
     set = validator(searchString, point);
     if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
-        gtk_label_set_label(mainLabel, "Ошибка");
-//        clearAllSearchString();
+        gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
+        //        clearAllSearchString();
     }
 }
 
 void buttonNumberClicked(GtkWidget * button) {
     
-    char * value = (gtk_button_get_label((GtkButton*)button));
+    const char * value = (gtk_button_get_label((GtkButton*)button));
     fillString(value, &point);
     updateLabel(mainLabel, searchString);
+}
+
+void setGraph(GtkWidget * button) {
+    
 }
 
 void specButtonClicked(GtkWidget * button) {
@@ -184,7 +204,7 @@ void specButtonClicked(GtkWidget * button) {
 }
 
 void buttonSignClicked(GtkWidget * button) {
-    char * value = (gtk_button_get_label((GtkButton*)button));
+   const char * value = (gtk_button_get_label((GtkButton*)button));
     fillString(value, &point);
     updateLabel(mainLabel, searchString);
 }
@@ -202,9 +222,26 @@ void clearAllSearchString()  {
     updateLabel(mainLabel,searchString);
 }
 
-char * fillString(char * input, int *point) {
+void fillString(const char * input, int *point) {
     for (int i = 0;i < strlen(input);i++) {
         searchString[*point] = input[i];
         *point+= 1;
     }
+}
+// MARK: CSS
+void myCSS(void){
+    GtkCssProvider *provider;
+    GdkDisplay *display;
+    GdkScreen *screen;
+    
+    provider = gtk_css_provider_new ();
+    display = gdk_display_get_default ();
+    screen = gdk_display_get_default_screen (display);
+    gtk_style_context_add_provider_for_screen (screen, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    
+    const gchar *myCssFile = "mystyle.css";
+    GError *error = 0;
+    
+    gtk_css_provider_load_from_file(provider, g_file_new_for_path(myCssFile), &error);
+    g_object_unref (provider);
 }
