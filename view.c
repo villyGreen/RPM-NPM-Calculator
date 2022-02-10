@@ -204,9 +204,30 @@ void specButtonClicked(GtkWidget * button) {
 }
 
 void buttonSignClicked(GtkWidget * button) {
-   const char * value = (gtk_button_get_label((GtkButton*)button));
-    fillString(value, &point);
-    updateLabel(mainLabel, searchString);
+
+      char * ch = gtk_button_get_label((GtkButton*)button);
+    
+    if ( ch[0] == '(') {
+        char value[1000];
+        char num = ' ';
+    if (point != 0) {
+        num = searchString[point - 1];
+    }
+    if ((num >= '0' && num <= '9') || num == ')') {
+        value[0] = '*';
+        size_t size = strlen((gtk_button_get_label((GtkButton*)button)));
+        for (int i = 0;i < size;i++) {
+            value[i + 1] = (gtk_button_get_label((GtkButton*)button))[i];
+            value[size + 1] = '\0';
+        }
+        fillString(value, &point);
+        updateLabel(mainLabel, searchString);
+    }
+    } else {
+        const char * value = (gtk_button_get_label((GtkButton*)button));
+        fillString(value, &point);
+        updateLabel(mainLabel, searchString);
+    }
 }
 
 // MARK: - Work with string

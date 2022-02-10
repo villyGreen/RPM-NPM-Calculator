@@ -9,6 +9,20 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
+#define NMAX 100
+
+
+typedef struct Stack_One {
+    char data[NMAX];
+    size_t size;
+} stack_one;
+
+typedef struct Stack_Two {
+    char data[NMAX];
+    size_t size;
+} stack_two;
+
+
 typedef enum {
     IS_NORMAL = 0,
     IS_EMPTY_FEEL = 1,
@@ -50,6 +64,7 @@ typedef struct {
 charactersSet validator(char * searhString, int point);
 double calculator (char * searchString, int point, charactersSet set);
 bool isValue(char  ch);
+bool isFractionValue(char ch);
 
 // View
 void init(int argc, char *argv[]);

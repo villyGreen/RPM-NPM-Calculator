@@ -6,18 +6,30 @@ charactersSet validator(char * searhString, int point) {
     set.errors = IS_NORMAL;
     set.openBracket = 0;
     set.closedBracket = 0;
+    bool fraction = 0;
     int error = 0;
     bool onlyValues = false;
     if(point == 0) {
         set.errors = IS_EMPTY_FEEL;
     }
+    if (searhString[point - 1] == '+' || searhString[point - 1] == '-' || searhString[point - 1] == '*'
+     || searhString[point] == '/' || searhString[point - 1] == '^' || searhString[point - 1] == '(')  {
+         set.errors = IS_SYNTAX_ERROR;
+     } 
     for (int i = 0;i < point;i++) {
         onlyValues = isValue(searhString[i]);
+        fraction = isFractionValue(searhString[i]);
+        if (searhString[i] == '.') {
+        }
         if (!onlyValues) {
             break;
         }
     }
     if (onlyValues) {
+        set.errors = IS_SYNTAX_ERROR;
+    }
+
+    if (fraction) {
         set.errors = IS_SYNTAX_ERROR;
     }
     if (point >= 2) {
@@ -98,6 +110,33 @@ bool isValue(char  ch) {
     return isValue;
 }
 
+bool isFractionValue(char ch) {
+    bool isValue = false;
+    if ((ch >= 48 && ch <= 57) || ch == 46) {
+        isValue = true;
+    }
+    return isValue;
+}
+
 double calculator (char * searchString, int point, charactersSet set) {
-    return 0.0;
+
+/*
+    PRIOROTY:
+    1 - -+
+    2 - /*
+    3 func ^
+
+
+621 + ( 100 * 20 / 1 * 2 - 6) * 5
+
+5
+3994       
+            *     
+        621 +
+
+12  
+234 *     _________
+*/
+
+return 0.0;
 }
