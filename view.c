@@ -160,8 +160,8 @@ void equalButtonClicked() {
     set = validator(searchString, point);
     if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
         gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
-        //        clearAllSearchString();
     }
+    calculator(searchString,point,set);
 }
 
 void buttonNumberClicked(GtkWidget * button) {

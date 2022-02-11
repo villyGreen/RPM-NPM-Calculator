@@ -11,16 +11,9 @@
 
 #define NMAX 100
 
-
-typedef struct Stack_One {
-    char data[NMAX];
-    size_t size;
-} stack_one;
-
-typedef struct Stack_Two {
-    char data[NMAX];
-    size_t size;
-} stack_two;
+#define STACK_MAX_SIZE 1000
+#define STACK_OVERFLOW  -100
+#define STACK_UNDERFLOW -101
 
 
 typedef enum {
@@ -60,11 +53,28 @@ typedef struct {
     error_List errors;
 } charactersSet;
 
+typedef struct {
+    char type;
+    double value;
+} value_type;
+
+typedef struct Stack_tag {
+    value_type data[STACK_MAX_SIZE];
+    size_t size;
+} Stack_t;
+
+
+
 // Model
 charactersSet validator(char * searhString, int point);
 double calculator (char * searchString, int point, charactersSet set);
 bool isValue(char  ch);
 bool isFractionValue(char ch);
+void push(Stack_t *stack, const value_type value);
+value_type pop(Stack_t *stack);
+value_type peek(const Stack_t *stack);
+size_t stackIsEmpty(const Stack_t *stack);
+size_t sizeOfStack(const Stack_t * stack);
 
 // View
 void init(int argc, char *argv[]);

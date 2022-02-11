@@ -13,9 +13,9 @@ charactersSet validator(char * searhString, int point) {
         set.errors = IS_EMPTY_FEEL;
     }
     if (searhString[point - 1] == '+' || searhString[point - 1] == '-' || searhString[point - 1] == '*'
-     || searhString[point] == '/' || searhString[point - 1] == '^' || searhString[point - 1] == '(')  {
-         set.errors = IS_SYNTAX_ERROR;
-     } 
+        || searhString[point] == '/' || searhString[point - 1] == '^' || searhString[point - 1] == '(')  {
+        set.errors = IS_SYNTAX_ERROR;
+    }
     for (int i = 0;i < point;i++) {
         onlyValues = isValue(searhString[i]);
         fraction = isFractionValue(searhString[i]);
@@ -28,7 +28,7 @@ charactersSet validator(char * searhString, int point) {
     if (onlyValues) {
         set.errors = IS_SYNTAX_ERROR;
     }
-
+    
     if (fraction) {
         set.errors = IS_SYNTAX_ERROR;
     }
@@ -119,24 +119,57 @@ bool isFractionValue(char ch) {
 }
 
 double calculator (char * searchString, int point, charactersSet set) {
+    
+    Stack_t stack_n;
+    Stack_t Stack_o;
+    value_type item;
+    char ch;
+    char  value[500];
+    int pointer = 0;
+    for (int i = 0; i < point; i++) {
+        if (searchString[i] >= '0' && searchString[i] <= '9') {
+            value[pointer] = searchString[i];
+            pointer++;
+        }
+        if (searchString[i] == '+' || searchString[i] == '-' || searchString[i] == '*' || searchString[i] == '/' || ) {
+            ch = searchString[i];
+        }
+    }
+    
+    double value_d = atof(value);
+    item.type = '0';
+    item.value = value_d;
+    g_print("%f\n",value_d);
+    
+    return 0.0;
+}
 
-/*
-    PRIOROTY:
-    1 - -+
-    2 - /*
-    3 func ^
+void push(Stack_t *stack, const value_type value) {
+    if (stack->size >= STACK_MAX_SIZE) {
+        exit(STACK_OVERFLOW);
+    }
+    stack->data[stack->size] = value;
+    stack->size++;
+}
 
+value_type pop(Stack_t *stack) {
+    if (stack->size == 0) {
+        exit(STACK_UNDERFLOW);
+    }
+    stack->size--;
+    return stack->data[stack->size];
+}
 
-621 + ( 100 * 20 / 1 * 2 - 6) * 5
+value_type peek(const Stack_t *stack) {
+    if (stack->size <= 0) {
+        exit(STACK_UNDERFLOW);
+    }
+    return stack->data[stack->size - 1];
+}
+size_t stackIsEmpty(const Stack_t *stack) {
+    return stack->size == 0 ? 1 : 0;
+}
 
-5
-3994       
-            *     
-        621 +
-
-12  
-234 *     _________
-*/
-
-return 0.0;
+size_t sizeOfStack(const Stack_t * stack) {
+    return stack->size;
 }
