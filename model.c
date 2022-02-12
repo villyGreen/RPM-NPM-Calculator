@@ -19,7 +19,7 @@ charactersSet validator(char * searhString, int point) {
     for (int i = 0;i < point;i++) {
         onlyValues = isValue(searhString[i]);
         fraction = isFractionValue(searhString[i]);
-        if (searhString[i] == '.') {
+        if (searhString[i] == ',') {
         }
         if (!onlyValues) {
             break;
@@ -38,7 +38,7 @@ charactersSet validator(char * searhString, int point) {
         }
         int pointer = 1;
         for (int i = point; i > 0; i--) {
-            if ((searhString[point - i] == '+' ||  searhString[point - i] == '-' || searhString[point - i] == '*' || searhString[point - i] == '/' || searhString[point - i] == '^' || searhString[point - i] == '.') && ((searhString[pointer] == '+' ||  searhString[pointer] == '-' || searhString[pointer] == '*' || searhString[pointer] == '/' || searhString[pointer] == '^' || searhString[pointer] == '.'))) {
+            if ((searhString[point - i] == '+' ||  searhString[point - i] == '-' || searhString[point - i] == '*' || searhString[point - i] == '/' || searhString[point - i] == '^' || searhString[point - i] == ',') && ((searhString[pointer] == '+' ||  searhString[pointer] == '-' || searhString[pointer] == '*' || searhString[pointer] == '/' || searhString[pointer] == '^' || searhString[pointer] == ','))) {
                 set.errors = IS_SYNTAX_ERROR;
                 break;
             }
@@ -46,13 +46,13 @@ charactersSet validator(char * searhString, int point) {
         }
         pointer = 1;
         for (int i = point; i > 0; i--) {
-            if ((searhString[point - i] == '.') && (searhString[pointer] == '(' || searhString[pointer] == ')')) {
+            if ((searhString[point - i] == ',') && (searhString[pointer] == '(' || searhString[pointer] == ')')) {
                 set.errors = IS_SYNTAX_ERROR;
                 break;
             }
             pointer++;
         }
-        if (searhString[point - 1] == '.') {
+        if (searhString[point - 1] == ',') {
             set.errors = IS_SYNTAX_ERROR;
         }
         for (int i = 0; i < point; i++) {
@@ -75,7 +75,7 @@ charactersSet validator(char * searhString, int point) {
         }
         pointer = 1;
         for (int i = point; i > 0; i--) {
-            if ( searhString[point - i] == '(' && ((searhString[pointer] == '+' ||  searhString[pointer] == '-' || searhString[pointer] == '*' || searhString[pointer] == '/' || searhString[pointer] == '^' || searhString[pointer] == '.'))) {
+            if ( searhString[point - i] == '(' && ((searhString[pointer] == '+' ||  searhString[pointer] == '-' || searhString[pointer] == '*' || searhString[pointer] == '/' || searhString[pointer] == '^' || searhString[pointer] == ','))) {
                 set.errors = IS_SYNTAX_ERROR;
                 break;
             }
@@ -83,7 +83,7 @@ charactersSet validator(char * searhString, int point) {
         }
         pointer = 1;
         for (int i = point; i > 0; i--) {
-            if (searhString[point - i] == '.') {
+            if (searhString[point - i] == ',') {
                 if (point - i == 0) {
                     set.errors = IS_SYNTAX_ERROR;
                     break;
@@ -118,33 +118,170 @@ bool isFractionValue(char ch) {
     return isValue;
 }
 
-double calculator (char * searchString, int point, charactersSet set) {
+double calculator (char * searchString, int point, charactersSet * set) {
     
     Stack_t stack_n;
-    Stack_t Stack_o;
+    stack_n.size = 0;
+    Stack_t stack_o;
+    stack_o.size = 0;
     value_type item;
     char ch;
     char  value[500];
     int pointer = 0;
+    double value_d;
+    int matchValue = 0;
+    int flag = 1;
+    
+    // (211,3123 * 1232) + 123
     for (int i = 0; i < point; i++) {
-        if (searchString[i] >= '0' && searchString[i] <= '9') {
+        while ((searchString[i] >= '0' && searchString[i] <= '9' || searchString[i] == '-' && flag == 1) || searchString[i] == ',') {
             value[pointer] = searchString[i];
+            flag = 0;
+            matchValue = 1;
             pointer++;
+            i++;
         }
-        if (searchString[i] == '+' || searchString[i] == '-' || searchString[i] == '*' || searchString[i] == '/' || ) {
-            ch = searchString[i];
+        if (matchValue) {
+        value[pointer + 1] = '\0';
+        sscanf(value,"%lf",&value_d);
+        item.type = '0';
+        item.value = value_d;
+        push(&stack_n, item);
+        for (int i = 0; i < pointer;i++) {
+            value[i] = '\0';
         }
+        pointer = 0;
+        }
+        g_print("%d\n",matchValue);
+        g_print("%c\n",searchString[i]);
+         g_print("aftef  %zu\n",sizeOfStack(&stack_n));
+        if (searchString[i] == '+' || searchString[i] == '-' && flag == 0 || searchString[i] == '*' || searchString[i] == '/') {
+            if (sizeOfStack(&stack_o) == 0) {
+                ch = searchString[i];
+                item.type = ch;
+                item.value = 0;
+                push(&stack_o, item);
+                g_print("hello1\n");
+            } else if (sizeOfStack(&stack_o) != 0 && getPriority(searchString[i]) > getPriority(peek(&stack_o).type)) {
+                ch = searchString[i];
+                item.type = ch;
+                item.value = 0;
+                push(&stack_o, item);
+                g_print("hello2\n");
+            } else {
+                g_print("hello3\n");
+                mathStackElements(&stack_n,&stack_o,item,set);
+                g_print("naeb2\n");
+                ch = searchString[i];
+                item.type = ch;
+                item.value = 0;
+                push(&stack_o, item);
+            }
+        }
+        
+        if (searchString[i] == '(') {
+                        ch = searchString[i];
+                           item.type = ch;
+                           item.value = 0;
+                           push(&stack_o, item);
+        }
+        
+        if (searchString[i] == ')') {
+            g_print("tut1\n");
+            while (peek(&stack_o).type != '(') {
+                bool res = mathStackElements(&stack_n,&stack_o,item,set);
+                       if (res == true) {
+                           break;
+                       }
+                 g_print("tut2\n");
+            }
+            pop(&stack_o);
+             g_print("%c\n",searchString[i]);
+            g_print("last stack n =  %lf\n",peek(&stack_n).value);
+        }
+        matchValue = 0;
     }
     
-    double value_d = atof(value);
-    item.type = '0';
-    item.value = value_d;
-    g_print("%f\n",value_d);
+    
+    while (sizeOfStack(&stack_o) != 0) {
+        bool res =  mathStackElements(&stack_n,&stack_o,item,set);
+        if (res == true) {
+            break;
+        }
+        g_print("naeb3\n");
+    }
     
     return 0.0;
 }
 
-void push(Stack_t *stack, const value_type value) {
+bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,charactersSet * set) {
+    double value_a,value_b,value_res;
+    bool error = false;
+    value_a = peek(stack_n).value;
+    pop(stack_n);
+    switch (peek(stack_o).type) {
+        case '+':
+            value_b = peek(stack_n).value;
+            value_res = value_b + value_a;
+            item.type = '0';
+            item.value = value_res;
+            pop(stack_n);
+            push(stack_n, item);
+            pop(stack_o);
+            break;
+        case '-':
+            value_b = peek(stack_n).value;
+            value_res = value_b - value_a;
+            item.type = '0';
+            item.value = value_res;
+            pop(stack_n);
+            push(stack_n, item);
+            pop(stack_o);
+            break;
+        case '*':
+            value_b = peek(stack_n).value;
+            value_res = value_b * value_a;
+            item.type = '0';
+            item.value = value_res;
+            pop(stack_n);
+            push(stack_n, item);
+            pop(stack_o);
+            break;
+        case '/':
+            value_b = peek(stack_n).value;
+            if (value_a != 0) {
+                value_res = value_b / value_a;
+                item.type = '0';
+                item.value = value_res;
+                pop(stack_n);
+                push(stack_n, item);
+                pop(stack_o);
+            } else {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+            }
+            break;
+            
+        default:
+            break;
+    }
+    g_print("%lf\n",value_res);
+    g_print("naeb1\n");
+    return error;
+}
+
+int getPriority(char ch) {
+    int priority = 0;
+    if (ch == '+' || ch == '-') {
+        priority = 1;
+    }
+    if (ch == '*' || ch == '/') {
+        priority = 2;
+    }
+    return priority;
+}
+
+void push(Stack_t *stack, value_type value) {
     if (stack->size >= STACK_MAX_SIZE) {
         exit(STACK_OVERFLOW);
     }

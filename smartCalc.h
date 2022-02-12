@@ -19,7 +19,8 @@
 typedef enum {
     IS_NORMAL = 0,
     IS_EMPTY_FEEL = 1,
-    IS_SYNTAX_ERROR = 2
+    IS_SYNTAX_ERROR = 2,
+    IS_ERROR_VALUE = 3
 } error_List;
 
 typedef struct {
@@ -64,17 +65,18 @@ typedef struct Stack_tag {
 } Stack_t;
 
 
-
 // Model
 charactersSet validator(char * searhString, int point);
-double calculator (char * searchString, int point, charactersSet set);
+double calculator (char * searchString, int point, charactersSet * set);
 bool isValue(char  ch);
 bool isFractionValue(char ch);
-void push(Stack_t *stack, const value_type value);
+void push(Stack_t *stack, value_type value);
 value_type pop(Stack_t *stack);
 value_type peek(const Stack_t *stack);
 size_t stackIsEmpty(const Stack_t *stack);
 size_t sizeOfStack(const Stack_t * stack);
+bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,charactersSet * set);
+int getPriority(char ch);
 
 // View
 void init(int argc, char *argv[]);
