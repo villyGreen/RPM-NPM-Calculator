@@ -160,10 +160,11 @@ void equalButtonClicked() {
     set = validator(searchString, point);
     if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
         gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
-    }
-    calculator(searchString,point,&set);
-    if (set.errors == IS_ERROR_VALUE) {
-        gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
+    } else {
+        calculator(searchString,point,&set);
+        if (set.errors == IS_ERROR_VALUE) {
+            gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
+        }
     }
 }
 
