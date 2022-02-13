@@ -16,3 +16,24 @@
 	border-radius: 5px;
 	border: 1px solid #B2AEAE;
 }
+
+#windowGraph {
+background-color: #FFF1D4;
+}
+
+#scalePlusButton {
+
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    border-radius: 15px;
+}
+#scaleMinusButton {
+
+    font-family: DejaVu Sans;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    border-radius: 15px;
+}

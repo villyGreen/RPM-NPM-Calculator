@@ -5,12 +5,18 @@ charactersSet set;
 charactersSet validator(char * searhString, int point) {
     set.errors = IS_NORMAL;
     set.openBracket = 0;
+    set.x = 0;
     set.closedBracket = 0;
     bool fraction = 0;
     int error = 0;
     bool onlyValues = false;
+
     if(point == 0) {
         set.errors = IS_EMPTY_FEEL;
+    }
+
+    if (searhString[point - 1] == 'x') {
+        set.x == 1;
     }
     if (searhString[point - 1] == '+' || searhString[point - 1] == '-' || searhString[point - 1] == '*'
         || searhString[point] == '/' || searhString[point - 1] == '^' || searhString[point - 1] == '(')  {
@@ -135,7 +141,11 @@ double calculator (char * searchString, int point, charactersSet * set) {
     // (211,3123 * 1232) + 123
     for (int i = 0; i < point; i++) {
         while ((searchString[i] >= '0' && searchString[i] <= '9' || searchString[i] == '-' && flag == 1) || searchString[i] == ',') {
-            value[pointer] = searchString[i];
+            ch = searchString[i];
+           if (ch == ',') {
+               ch = '.';
+           }
+            value[pointer] = ch;
             flag = 0;
             matchValue = 1;
             pointer++;

@@ -2,6 +2,7 @@
 #define SRC_S21_SMARTCALC_H_
 
 #include <stdio.h>
+#include <cairo.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
@@ -28,6 +29,7 @@ typedef struct {
     int closedBracket;
     bool signReverse;
     int dot;
+    int x;
     error_List errors;
 } charactersSet;
 
@@ -74,5 +76,9 @@ void buttonSignClicked(GtkWidget * button);
 void equalButtonClicked();
 void setGraph(GtkWidget * button);
 void myCSS(void);
+void drawGraph();
+static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, 
+    gpointer user_data);
+    static void do_drawing(cairo_t *cr);
 
 #endif  // SRC_S21_SMARTCALC_H_
