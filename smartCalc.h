@@ -24,33 +24,10 @@ typedef enum {
 } error_List;
 
 typedef struct {
-    int add;
-    int div;
-    int mult;
-    int sub;
-    int extent;
-} signSet;
-
-typedef struct {
-    int sqrt;
-    int cos;
-    int acos;
-    int ln;
-    int sin;
-    int asin;
-    int log;
-    int tan;
-    int atan;
-    int mod;
-} functionSet;
-
-typedef struct {
     int openBracket;
     int closedBracket;
     bool signReverse;
     int dot;
-    signSet sign;
-    functionSet functions;
     error_List errors;
 } charactersSet;
 

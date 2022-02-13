@@ -176,25 +176,25 @@ double calculator (char * searchString, int point, charactersSet * set) {
                 if (func[0] == 'c' && func[1] == 'o' && func[2] == 's') {
                     item.type = 'c';
                     item.value = 0;
-                    //                                   push(&stack_o, item);
+                    push(&stack_o, item);
                 }
                 // tan
                 if (func[0] == 't' && func[1] == 'a' && func[2] == 'n') {
                     item.type = 't';
                     item.value = 0;
-                    //                                   push(&stack_o, item);
+                    push(&stack_o, item);
                 }
                 // log
                 if (func[0] == 'l' && func[1] == 'o' && func[2] == 'g') {
                     item.type = 'l';
                     item.value = 0;
-                    //                                   push(&stack_o, item);
+                    push(&stack_o, item);
                 }
                 // mod
                 if (func[0] == 'm' && func[1] == 'o' && func[2] == 'd') {
                     item.type = 'm';
                     item.value = 0;
-                    //                                   push(&stack_o, item);
+                    push(&stack_o, item);
                 }
                 
             }
@@ -203,7 +203,7 @@ double calculator (char * searchString, int point, charactersSet * set) {
                 if (func[0] == 'l' && func[1] == 'n') {
                     item.type = 'L';
                     item.value = 0;
-                    //push(&stack_o, item);
+                    push(&stack_o, item);
                 }
             }
             
@@ -212,26 +212,25 @@ double calculator (char * searchString, int point, charactersSet * set) {
                 if (func[0] == 'a' && func[1] == 'c' && func[2] == 'o' && func[3] == 's') {
                     item.type = 'C';
                     item.value = 0;
-                    //push(&stack_o, item);
+                    push(&stack_o, item);
                 }
                 // asin
                 if (func[0] == 'a' && func[1] == 's' && func[2] == 'i' && func[3] == 'n') {
                     item.type = 'S';
                     item.value = 0;
-                    //push(&stack_o, item);
+                    push(&stack_o, item);
                 }
                 // atan
                 if (func[0] == 'a' && func[1] == 't' && func[2] == 'a' && func[3] == 'n') {
                     item.type = 'T';
                     item.value = 0;
-                    //push(&stack_o, item);
+                    push(&stack_o, item);
                 }
                 // sqrt
                 if (func[0] == 's' && func[1] == 'q' && func[2] == 'r' && func[3] == 't') {
                     item.type = 'Q';
                     item.value = 0;
-                
-                    //push(&stack_o, item);
+                    push(&stack_o, item);
                 }
             }
         }
@@ -294,7 +293,7 @@ double calculator (char * searchString, int point, charactersSet * set) {
         g_print("naeb3\n");
     }
     
-    return 0.0;
+    return peek(&stack_n).value;
 }
 
 bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,charactersSet * set) {
@@ -345,17 +344,103 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             }
             break;
             
-            case 's':
-                    g_print("value a = %lf\n", value_a);
-                      value_res = sin(value_a);
-                       g_print("value res = %lf\n", value_res);
-                      item.type = '0';
-                      item.value = value_res;
-                      push(stack_n, item);
-                      pop(stack_o);
-                        g_print("ebanulo\n");
-                      break;
-        
+        case 's':
+            g_print("value a = %lf\n", value_a);
+            value_res = sin(value_a);
+            g_print("value res = %lf\n", value_res);
+            item.type = '0';
+            item.value = value_res;
+            push(stack_n, item);
+            pop(stack_o);
+            g_print("ebanulo\n");
+            break;
+        case 'c':
+            value_res = cos(value_a);
+            item.type = '0';
+            item.value = value_res;
+            push(stack_n, item);
+            pop(stack_o);
+            g_print("ebanulo\n");
+            break;
+            
+        case 't':
+            value_res = tan(value_a);
+            item.type = '0';
+            item.value = value_res;
+            push(stack_n, item);
+            pop(stack_o);
+            g_print("ebanulo\n");
+            break;
+        case 'l':
+            value_res = log10(value_a);
+            item.type = '0';
+            item.value = value_res;
+            push(stack_n, item);
+            pop(stack_o);
+            g_print("ebanulo\n");
+            break;
+            //        case 'm':
+            //            value_res = fmod(value_a);
+            //            item.type = '0';
+            //            item.value = value_res;
+            //            push(stack_n, item);
+            //            pop(stack_o);
+            //            g_print("ebanulo\n");
+            //            break;
+        case 'L':
+            value_res = log(value_a);
+            item.type = '0';
+            item.value = value_res;
+            push(stack_n, item);
+            pop(stack_o);
+            g_print("ebanulo\n");
+            break;
+        case 'C':
+            if (value_a >= -1 && value_a <= 1) {
+                
+                value_res = acos(value_a);
+                item.type = '0';
+                item.value = value_res;
+                push(stack_n, item);
+                pop(stack_o);
+                g_print("ebanulo\n");
+            } else {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+            }
+            break;
+        case 'S':
+            if (value_a >= -1 && value_a <= 1) {
+                
+                value_res = asin(value_a);
+                item.type = '0';
+                item.value = value_res;
+                push(stack_n, item);
+                pop(stack_o);
+                g_print("ebanulo\n");
+            } else {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+            }
+            break;
+        case 'T':
+            value_res = atan(value_a);
+            item.type = '0';
+            item.value = value_res;
+            push(stack_n, item);
+            pop(stack_o);
+            g_print("ebanulo\n");
+            break;
+        case 'Q':
+            value_res = sqrt(value_a);
+            item.type = '0';
+            item.value = value_res;
+            push(stack_n, item);
+            pop(stack_o);
+            g_print("ebanulo\n");
+            break;
+            
+            
         case '^':
             value_b = peek(stack_n).value;
             if (value_a != 0) {

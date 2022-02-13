@@ -157,13 +157,21 @@ void setupSignButtonsTargets(GtkWidget * button) {
 
 void equalButtonClicked() {
     charactersSet set;
+    double res = 0;
+    char res_string[100];
     set = validator(searchString, point);
     if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
         gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
     } else {
-        calculator(searchString,point,&set);
+        res = calculator(searchString,point,&set);
         if (set.errors == IS_ERROR_VALUE) {
             gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
+        } else {
+            sprintf(res_string,"%lf",res);
+            g_print(" fdsf %s\n",res_string);
+            strcat(searchString, " = ");
+            strcat(searchString, res_string);
+            updateLabel(mainLabel,searchString);
         }
     }
 }
