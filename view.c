@@ -22,6 +22,10 @@ struct {
 } glob;
 
 void init(int argc, char *argv[]) {
+    double result = sin(M_PI / 2) * pow(2.231, 3) - acos(0.123);
+    g_print("%lf",result);
+    // 11,104492391
+    // 1,4474840516
     int startY = 260;
     int startX = 10;
     int specX = 169;

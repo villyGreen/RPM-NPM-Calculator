@@ -142,9 +142,9 @@ double calculator (char * searchString, int point, charactersSet * set) {
     for (int i = 0; i < point; i++) {
         while ((searchString[i] >= '0' && searchString[i] <= '9' || searchString[i] == '-' && flag == 1) || searchString[i] == ',') {
             ch = searchString[i];
-           if (ch == ',') {
-               ch = '.';
-           }
+//           if (ch == ',') {
+//               ch = '.';
+//           }
             value[pointer] = ch;
             flag = 0;
             matchValue = 1;
@@ -153,7 +153,9 @@ double calculator (char * searchString, int point, charactersSet * set) {
         }
         if (matchValue) {
             value[pointer + 1] = '\0';
+                g_print(" s %s\n",value);
             sscanf(value,"%lf",&value_d);
+            g_print(" dd %lf\n",value_d);
             item.type = '0';
             item.value = value_d;
             push(&stack_n, item);
