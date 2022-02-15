@@ -10,11 +10,14 @@ charactersSet validator(char * searhString, int point) {
     bool fraction = 0;
     int error = 0;
     bool onlyValues = false;
-
+    
     if(point == 0) {
         set.errors = IS_EMPTY_FEEL;
     }
-
+    if (searhString[0] == 'x' || searhString[0] == 'm' || searhString[0] == '+') {
+        set.errors = IS_SYNTAX_ERROR;
+    }
+    
     if (searhString[point - 1] == 'x') {
         set.x == 1;
     }
@@ -38,7 +41,7 @@ charactersSet validator(char * searhString, int point) {
     if (fraction) {
         set.errors = IS_SYNTAX_ERROR;
     }
-    if (point >= 2) {
+    if (point >= 1) {
         if ((searhString[0] == '/' || searhString[0] == '*' || searhString[0] == '^' || searhString[0] == ')')) {
             set.errors = IS_SYNTAX_ERROR;
         }
@@ -81,7 +84,7 @@ charactersSet validator(char * searhString, int point) {
         }
         pointer = 1;
         for (int i = point; i > 0; i--) {
-            if ( searhString[point - i] == '(' && ((searhString[pointer] == '+' ||  searhString[pointer] == '-' || searhString[pointer] == '*' || searhString[pointer] == '/' || searhString[pointer] == '^' || searhString[pointer] == ','))) {
+            if ( searhString[point - i] == '(' && ((searhString[pointer] == '+'  || searhString[pointer] == '*' || searhString[pointer] == '/' || searhString[pointer] == '^' || searhString[pointer] == ','))) {
                 set.errors = IS_SYNTAX_ERROR;
                 break;
             }
@@ -132,19 +135,19 @@ double calculator (char * searchString, int point, charactersSet * set) {
     stack_o.size = 0;
     value_type item;
     char ch;
+    bool res;
     char  value[500];
     int pointer = 0;
     double value_d;
     int matchValue = 0;
     int flag = 1;
     
-    // (211,3123 * 1232) + 123
     for (int i = 0; i < point; i++) {
         while ((searchString[i] >= '0' && searchString[i] <= '9' || searchString[i] == '-' && flag == 1) || searchString[i] == ',') {
             ch = searchString[i];
-//           if (ch == ',') {
-//               ch = '.';
-//           }
+            //           if (ch == ',') {
+            //               ch = '.';
+            //           }
             value[pointer] = ch;
             flag = 0;
             matchValue = 1;
@@ -153,9 +156,9 @@ double calculator (char * searchString, int point, charactersSet * set) {
         }
         if (matchValue) {
             value[pointer + 1] = '\0';
-                g_print(" s %s\n",value);
+            
             sscanf(value,"%lf",&value_d);
-            g_print(" dd %lf\n",value_d);
+            
             item.type = '0';
             item.value = value_d;
             push(&stack_n, item);
@@ -164,7 +167,7 @@ double calculator (char * searchString, int point, charactersSet * set) {
             }
             pointer = 0;
         }
-        if (searchString[i] == 's' || searchString[i] == 'c' || searchString[i] == 'a' || searchString[i] == 'l' || searchString[i] == 't' || searchString[i] == 'm') {
+        if (searchString[i] == 's' || searchString[i] == 'c' || searchString[i] == 'a' || searchString[i] == 'l' || searchString[i] == 't') {
             char func[4];
             size_t lenght = 0;
             for (int j = 0; j < 4;j++) {
@@ -181,7 +184,6 @@ double calculator (char * searchString, int point, charactersSet * set) {
                 if (func[0] == 's' && func[1] == 'i' && func[2] == 'n') {
                     item.type = 's';
                     item.value = 0;
-                    g_print("this is sin\n");
                     push(&stack_o, item);
                 }
                 // cos
@@ -202,13 +204,6 @@ double calculator (char * searchString, int point, charactersSet * set) {
                     item.value = 0;
                     push(&stack_o, item);
                 }
-                // mod
-                if (func[0] == 'm' && func[1] == 'o' && func[2] == 'd') {
-                    item.type = 'm';
-                    item.value = 0;
-                    push(&stack_o, item);
-                }
-                
             }
             if (lenght == 2) {
                 // ln
@@ -218,7 +213,6 @@ double calculator (char * searchString, int point, charactersSet * set) {
                     push(&stack_o, item);
                 }
             }
-            
             if (lenght == 4) {
                 // acos
                 if (func[0] == 'a' && func[1] == 'c' && func[2] == 'o' && func[3] == 's') {
@@ -246,66 +240,52 @@ double calculator (char * searchString, int point, charactersSet * set) {
                 }
             }
         }
-        g_print("%d\n",matchValue);
-        g_print("%c\n",searchString[i]);
-        g_print("aftef  %zu\n",sizeOfStack(&stack_n));
-        if (searchString[i] == '+' || searchString[i] == '-' && flag == 0 || searchString[i] == '*' || searchString[i] == '/' || searchString[i] == '^') {
+        if (searchString[i] == '+' || searchString[i] == '-' && flag == 0 || searchString[i] == '*' || searchString[i] == '/' || searchString[i] == '^' || searchString[i] == 'm') {
             if (sizeOfStack(&stack_o) == 0) {
                 ch = searchString[i];
                 item.type = ch;
                 item.value = 0;
                 push(&stack_o, item);
-                g_print("hello1\n");
             } else if (sizeOfStack(&stack_o) != 0 && getPriority(searchString[i]) > getPriority(peek(&stack_o).type)) {
                 ch = searchString[i];
                 item.type = ch;
                 item.value = 0;
                 push(&stack_o, item);
-                g_print("hello2\n");
             } else {
-                g_print("hello3\n");
                 mathStackElements(&stack_n,&stack_o,item,set);
-                g_print("naeb2\n");
                 ch = searchString[i];
                 item.type = ch;
                 item.value = 0;
                 push(&stack_o, item);
             }
+            if (searchString[i] == 'm') {
+                i+=2;
+            }
         }
-        
         if (searchString[i] == '(') {
             ch = searchString[i];
             item.type = ch;
             item.value = 0;
             push(&stack_o, item);
         }
-        
         if (searchString[i] == ')') {
-            g_print("tut1\n");
             while (peek(&stack_o).type != '(') {
                 bool res = mathStackElements(&stack_n,&stack_o,item,set);
                 if (res == true) {
                     break;
                 }
-                g_print("tut2\n");
             }
             pop(&stack_o);
-            g_print("%c\n",searchString[i]);
-            g_print("last stack n =  %lf\n",peek(&stack_n).value);
         }
         matchValue = 0;
     }
-    
-    
     while (sizeOfStack(&stack_o) != 0) {
-        bool res =  mathStackElements(&stack_n,&stack_o,item,set);
+        res =  mathStackElements(&stack_n,&stack_o,item,set);
         if (res == true) {
             break;
         }
-        g_print("naeb3\n");
     }
-    
-    return peek(&stack_n).value;
+    return  !res ? peek(&stack_n).value : 0.0;
 }
 
 bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,charactersSet * set) {
@@ -315,6 +295,11 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
     pop(stack_n);
     switch (peek(stack_o).type) {
         case '+':
+            if (sizeOfStack(stack_n) == 0) {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+                break;
+            }
             value_b = peek(stack_n).value;
             value_res = value_b + value_a;
             item.type = '0';
@@ -324,6 +309,11 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             pop(stack_o);
             break;
         case '-':
+            if (sizeOfStack(stack_n) == 0) {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+                break;
+            }
             value_b = peek(stack_n).value;
             value_res = value_b - value_a;
             item.type = '0';
@@ -333,6 +323,11 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             pop(stack_o);
             break;
         case '*':
+            if (sizeOfStack(stack_n) == 0) {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+                break;
+            }
             value_b = peek(stack_n).value;
             value_res = value_b * value_a;
             item.type = '0';
@@ -342,6 +337,11 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             pop(stack_o);
             break;
         case '/':
+            if (sizeOfStack(stack_n) == 0) {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+                break;
+            }
             value_b = peek(stack_n).value;
             if (value_a != 0) {
                 value_res = value_b / value_a;
@@ -355,33 +355,31 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
                 set->errors = IS_ERROR_VALUE;
             }
             break;
-            
         case 's':
-            g_print("value a = %lf\n", value_a);
             value_res = sin(value_a);
-            g_print("value res = %lf\n", value_res);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
             pop(stack_o);
-            g_print("ebanulo\n");
             break;
         case 'c':
-            value_res = cos(value_a);
+            value_res = Cos(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
             pop(stack_o);
-            g_print("ebanulo\n");
             break;
-            
         case 't':
+            if (Cos(value_a) == 0) {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+                break;
+            }
             value_res = tan(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
             pop(stack_o);
-            g_print("ebanulo\n");
             break;
         case 'l':
             value_res = log10(value_a);
@@ -389,33 +387,35 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             item.value = value_res;
             push(stack_n, item);
             pop(stack_o);
-            g_print("ebanulo\n");
             break;
-            //        case 'm':
-            //            value_res = fmod(value_a);
-            //            item.type = '0';
-            //            item.value = value_res;
-            //            push(stack_n, item);
-            //            pop(stack_o);
-            //            g_print("ebanulo\n");
-            //            break;
+        case 'm':
+            if (sizeOfStack(stack_n) == 0) {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+                break;
+            }
+            value_b = peek(stack_n).value;
+            value_res = fmod(value_b,value_a);
+            item.type = '0';
+            item.value = value_res;
+            pop(stack_n);
+            push(stack_n, item);
+            pop(stack_o);
+            break;
         case 'L':
             value_res = log(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
             pop(stack_o);
-            g_print("ebanulo\n");
             break;
         case 'C':
             if (value_a >= -1 && value_a <= 1) {
-                
                 value_res = acos(value_a);
                 item.type = '0';
                 item.value = value_res;
                 push(stack_n, item);
                 pop(stack_o);
-                g_print("ebanulo\n");
             } else {
                 error = true;
                 set->errors = IS_ERROR_VALUE;
@@ -423,13 +423,11 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             break;
         case 'S':
             if (value_a >= -1 && value_a <= 1) {
-                
                 value_res = asin(value_a);
                 item.type = '0';
                 item.value = value_res;
                 push(stack_n, item);
                 pop(stack_o);
-                g_print("ebanulo\n");
             } else {
                 error = true;
                 set->errors = IS_ERROR_VALUE;
@@ -441,7 +439,7 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             item.value = value_res;
             push(stack_n, item);
             pop(stack_o);
-            g_print("ebanulo\n");
+            
             break;
         case 'Q':
             value_res = sqrt(value_a);
@@ -449,11 +447,13 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             item.value = value_res;
             push(stack_n, item);
             pop(stack_o);
-            g_print("ebanulo\n");
             break;
-            
-            
         case '^':
+            if (sizeOfStack(stack_n) == 0) {
+                error = true;
+                set->errors = IS_ERROR_VALUE;
+                break;
+            }
             value_b = peek(stack_n).value;
             if (value_a != 0) {
                 value_res = pow(value_b,value_a);
@@ -467,18 +467,14 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
                 set->errors = IS_ERROR_VALUE;
             }
             break;
-            
         default:
             break;
     }
-    g_print("%lf\n",value_res);
-    g_print("naeb1\n");
     return error;
 }
 
 int getPriority(char ch) {
     int priority = 0;
-    
     if (ch == 'c' || ch == 's' || ch == 't' || ch == 'l' || ch == 'S' || ch == 'C' || ch == 'Q' || ch == 'T' || ch == 'L' || ch == 'm') {
         priority = 4;
     }
@@ -488,7 +484,7 @@ int getPriority(char ch) {
     if (ch == '*' || ch == '/') {
         priority = 2;
     }
-    if (ch == '^') {
+    if (ch == '^' ) {
         priority = 3;
     }
     return priority;
@@ -522,4 +518,12 @@ size_t stackIsEmpty(const Stack_t *stack) {
 
 size_t sizeOfStack(const Stack_t * stack) {
     return stack->size;
+}
+
+double Sin(double x) {
+    return (round(sin(x) * 10000000) / 10000000);
+}
+
+double Cos(double x) {
+    return (round(cos(x) * 10000000) / 10000000);
 }

@@ -12,6 +12,7 @@ GtkWidget * signButtons[7];
 GtkWidget * equalButton;
 GtkWidget * graphButton;
 GtkWidget * clearButton;
+GtkWidget * modButton;
 GtkWidget *windowGraph;
 int point = 0;
 
@@ -22,8 +23,6 @@ struct {
 } glob;
 
 void init(int argc, char *argv[]) {
-    double result = sin(M_PI / 2) * pow(2.231, 3) - acos(0.123);
-    g_print("%lf",result);
     // 11,104492391
     // 1,4474840516
     int startY = 260;
@@ -52,9 +51,14 @@ void init(int argc, char *argv[]) {
             startY -= 36;
             startX = 10;
         }
-        setupNumberButtonsTarget(numberButtons[i]);
-        setupConstraints(startX,startY,numberButtons[i],fixed);
-        startX += 53;
+        if (i == 2) {
+             g_signal_connect(G_OBJECT(numberButtons[2]), "clicked", G_CALLBACK(xButtonPressed), NULL);
+                setupConstraints(startX,startY,numberButtons[i],fixed);
+        } else {
+            setupNumberButtonsTarget(numberButtons[i]);
+            setupConstraints(startX,startY,numberButtons[i],fixed);
+            startX += 53;
+        }
     }
     // MARK: - functions buttons
     createFunctionButtons(specButtons);
@@ -69,9 +73,7 @@ void init(int argc, char *argv[]) {
         setupConstraints(specX,specY,specButtons[i],fixed);
         specX += 63;
     }
-    gtk_widget_set_size_request(specButtons[9], 60, 30);
-    setupSpecButtonssTargets(specButtons[9]);
-    setupConstraints(411,116,specButtons[9],fixed);
+    
     
     // MARK: - sign buttons
     createSignButtons(signButtons);
@@ -86,6 +88,12 @@ void init(int argc, char *argv[]) {
         setupConstraints(signX,signY,signButtons[i],fixed);
         signX += 53;
     }
+    modButton = gtk_button_new_with_label("mod");
+    gtk_fixed_put (GTK_FIXED (fixed), modButton, 411, 116);
+    gtk_widget_set_size_request(modButton, 60, 30);
+    g_signal_connect(G_OBJECT(modButton), "clicked", G_CALLBACK(modButtonClicked), NULL);
+    
+    
     // MARK: - equalButton
     equalButton = gtk_button_new_with_label("=");
     gtk_fixed_put (GTK_FIXED (fixed), equalButton, 169, 224);
@@ -129,9 +137,9 @@ void createNumButtons(GtkWidget ** buttons) {
 }
 
 void createFunctionButtons(GtkWidget ** buttons) {
-    char * specButtons[10] = {"acos","asin","atan","cos","sin","tan","sqrt","ln","log","mod"};
+    char * specButtons[9] = {"acos","asin","atan","cos","sin","tan","sqrt","ln","log"};
     GtkWidget * button;
-    for (int i = 0;i < 10;i++) {
+    for (int i = 0;i < 9;i++) {
         button = gtk_button_new_with_label(specButtons[i]);
         buttons[i] = button;
     }
@@ -171,7 +179,8 @@ void setupSignButtonsTargets(GtkWidget * button) {
 void equalButtonClicked() {
     charactersSet set;
     double res = 0;
-    char res_string[100];
+    size_t lenght = 0;
+    char * res_string;
     set = validator(searchString, point);
     if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
         gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
@@ -181,12 +190,42 @@ void equalButtonClicked() {
             gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
         } else {
             sprintf(res_string,"%lf",res);
-            g_print(" fdsf %s\n",res_string);
             strcat(searchString, " = ");
             strcat(searchString, res_string);
             updateLabel(mainLabel,searchString);
         }
     }
+}
+
+void modButtonClicked(GtkWidget * button) {
+    const  char * value = (gtk_button_get_label((GtkButton*)button));
+    fillString(value, &point);
+    updateLabel(mainLabel, searchString);
+}
+
+
+void xButtonPressed(GtkWidget * button) {
+    char value[1000];
+       char num = ' ';
+       if (point != 0) {
+           num = searchString[point - 1];
+       }
+    if ((num >= '0' && num <= '9') || num == ')') {
+           value[0] = '*';
+           size_t size = strlen((gtk_button_get_label((GtkButton*)button)));
+           for (int i = 0;i < size;i++) {
+               value[i + 1] = (gtk_button_get_label((GtkButton*)button))[i];
+           }
+           value[size + 1] = '\0';
+       } else {
+           size_t size = strlen((gtk_button_get_label((GtkButton*)button)));
+           for (int i = 0;i < size;i++) {
+               value[i] = (gtk_button_get_label((GtkButton*)button))[i];
+           }
+           value[size] = '\0';
+       }
+       fillString(value,&point);
+       updateLabel(mainLabel, searchString);
 }
 
 void buttonNumberClicked(GtkWidget * button) {
@@ -206,7 +245,7 @@ void specButtonClicked(GtkWidget * button) {
     if (point != 0) {
         num = searchString[point - 1];
     }
-    if ((num >= '0' && num <= '9') || num == ')') {
+    if ((num >= '0' && num <= '9') || num == ')' || num == 'x') {
         value[0] = '*';
         size_t size = strlen((gtk_button_get_label((GtkButton*)button)));
         for (int i = 0;i < size;i++) {
@@ -237,7 +276,7 @@ void buttonSignClicked(GtkWidget * button) {
             num = searchString[point - 1];
         }
         
-        if ((num >= '0' && num <= '9') || num == ')') {
+        if ((num >= '0' && num <= '9') || num == ')' || num == 'x') {
             value[0] = '*';
             size_t size = strlen((gtk_button_get_label((GtkButton*)button)));
             for (int i = 0;i < size;i++) {
@@ -264,7 +303,8 @@ void updateLabel(GtkWidget * label, char * text) {
 }
 
 void clearAllSearchString()  {
-    for (int i = 0; i < point;i++) {
+    size_t lenght = strlen(searchString);
+    for (int i = lenght; i >= 0;i--) {
         searchString[i] = '\0';
     }
     point = 0;
@@ -277,6 +317,7 @@ void fillString(const char * input, int *point) {
         *point+= 1;
     }
 }
+
 // MARK: CSS
 void myCSS(void){
     GtkCssProvider *provider;
@@ -317,21 +358,21 @@ static void do_drawing(cairo_t *cr)
     cairo_line_to(cr, 490,10 );
     cairo_move_to(cr, 500, 0);
     cairo_line_to(cr, 510,10 );
-      cairo_move_to(cr, 513, 10);
-     cairo_show_text(cr, "Y");
+    cairo_move_to(cr, 513, 10);
+    cairo_show_text(cr, "Y");
     
     cairo_move_to(cr, 0, 375);
     cairo_line_to(cr, 1000,375 );
     cairo_move_to(cr, 1000, 375);
     cairo_line_to(cr, 990,365 );
     cairo_move_to(cr, 1000, 375);
-       cairo_line_to(cr, 990,385 );
+    cairo_line_to(cr, 990,385 );
     
-     cairo_move_to(cr, 1000, 385);
+    cairo_move_to(cr, 1000, 385);
     cairo_show_text(cr, "X");
     
     cairo_move_to(cr, 504, 387);
-        cairo_show_text(cr, "0");
+    cairo_show_text(cr, "0");
     glob.count = 0;
     
     cairo_stroke(cr);
@@ -369,9 +410,9 @@ void drawGraph() {
     scaleMinusButton = gtk_button_new_with_label("Scale -");
     gtk_fixed_put (GTK_FIXED (fix), scaleMinusButton, 1017, 380);
     gtk_widget_set_size_request(scaleMinusButton, 50, 50);
-
+    
     gtk_widget_set_name(scalePlusButton, "scalePlusButton");
-      gtk_widget_set_name(scaleMinusButton, "scaleMinusButton");
+    gtk_widget_set_name(scaleMinusButton, "scaleMinusButton");
     
     gtk_widget_show_all(windowGraph);
     

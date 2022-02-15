@@ -12,7 +12,7 @@
 
 #define NMAX 100
 
-#define STACK_MAX_SIZE 1000
+#define STACK_MAX_SIZE 256
 #define STACK_OVERFLOW  -100
 #define STACK_UNDERFLOW -101
 
@@ -77,8 +77,12 @@ void equalButtonClicked();
 void setGraph(GtkWidget * button);
 void myCSS(void);
 void drawGraph();
+void xButtonPressed(GtkWidget * button);
+void modButtonClicked(GtkWidget * button);
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, 
-    gpointer user_data);
-    static void do_drawing(cairo_t *cr);
+                              gpointer user_data);
+static void do_drawing(cairo_t *cr);
+double Sin(double x);
+double Cos(double x);
 
 #endif  // SRC_S21_SMARTCALC_H_
