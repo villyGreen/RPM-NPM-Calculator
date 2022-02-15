@@ -127,7 +127,7 @@ bool isFractionValue(char ch) {
     return isValue;
 }
 
-double calculator (char * searchString, int point, charactersSet * set) {
+double calculator (char * searchString, int point, charactersSet * set, int x_coordinate) {
     
     Stack_t stack_n;
     stack_n.size = 0;
@@ -143,6 +143,11 @@ double calculator (char * searchString, int point, charactersSet * set) {
     int flag = 1;
     
     for (int i = 0; i < point; i++) {
+        if (searchString[i] == 'x') {
+            item.type = '0';
+            item.value = x_coordinate;
+            push(&stack_n, item);
+        }
         while ((searchString[i] >= '0' && searchString[i] <= '9' || searchString[i] == '-' && flag == 1) || searchString[i] == ',') {
             ch = searchString[i];
             //           if (ch == ',') {
@@ -285,6 +290,7 @@ double calculator (char * searchString, int point, charactersSet * set) {
             break;
         }
     }
+    g_print("resultat  =  %lf\n", peek(&stack_n).value);
     return  !res ? peek(&stack_n).value : 0.0;
 }
 

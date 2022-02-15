@@ -122,6 +122,7 @@ void init(int argc, char *argv[]) {
     gtk_widget_set_size_request(mainLabel, 558, 95);
     gtk_widget_set_name(mainLabel, "mainLabel");
     gtk_widget_show_all(GTK_WIDGET(window));
+      gtk_widget_set_sensitive(graphButton,false);
     gtk_main();
 }
 
@@ -185,7 +186,7 @@ void equalButtonClicked() {
     if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
         gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
     } else {
-        res = calculator(searchString,point,&set);
+        res = calculator(searchString,point,&set,0);
         if (set.errors == IS_ERROR_VALUE) {
             gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
         } else {
@@ -205,6 +206,8 @@ void modButtonClicked(GtkWidget * button) {
 
 
 void xButtonPressed(GtkWidget * button) {
+     gtk_widget_set_sensitive(graphButton,true);
+    gtk_widget_set_sensitive(equalButton,false);
     char value[1000];
        char num = ' ';
        if (point != 0) {
@@ -236,6 +239,11 @@ void buttonNumberClicked(GtkWidget * button) {
 }
 
 void setGraph(GtkWidget * button) {
+    charactersSet set;
+    
+    for (int i = 0;i < 1000;i++) {
+    calculator(searchString,point,&set,i);
+    }
     drawGraph();
 }
 
@@ -309,6 +317,8 @@ void clearAllSearchString()  {
     }
     point = 0;
     updateLabel(mainLabel,searchString);
+    gtk_widget_set_sensitive(equalButton,true);
+     gtk_widget_set_sensitive(graphButton,false);
 }
 
 void fillString(const char * input, int *point) {
@@ -342,14 +352,31 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
                               gpointer user_data)
 {
     do_drawing(cr);
+    do_drawing_graph(cr);
     return FALSE;
+}
+
+
+static void do_drawing_graph(cairo_t *cr) {
+    cairo_set_source_rgb(cr, 4, 0, 0);
+    cairo_set_line_width(cr, 1.3);
+    
+    cairo_move_to(cr, 30, 401.000000);
+    cairo_line_to(cr, 31,412.960170);
+    cairo_line_to(cr, 32,420.960170);
+    cairo_line_to(cr, 33,430.960170);
+    cairo_line_to(cr, 34,440.960170);
+    cairo_line_to(cr, 40,450.960170);
+      cairo_line_to(cr, 300,100.960170);
+    glob.count = 0;
+    
+    cairo_stroke(cr);
 }
 
 static void do_drawing(cairo_t *cr)
 {
     g_print("draw\n");
-    cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_set_line_width(cr, 1.3);
+    
     
     cairo_move_to(cr, 500, 0);
     cairo_line_to(cr, 500,800 );

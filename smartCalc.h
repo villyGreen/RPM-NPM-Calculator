@@ -46,7 +46,7 @@ typedef struct Stack_tag {
 
 // Model
 charactersSet validator(char * searhString, int point);
-double calculator (char * searchString, int point, charactersSet * set);
+double calculator (char * searchString, int point, charactersSet * set, int x_coordinate);
 bool isValue(char  ch);
 bool isFractionValue(char ch);
 void push(Stack_t *stack, value_type value);
@@ -81,6 +81,7 @@ void xButtonPressed(GtkWidget * button);
 void modButtonClicked(GtkWidget * button);
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, 
                               gpointer user_data);
+static void do_drawing_graph(cairo_t *cr);
 static void do_drawing(cairo_t *cr);
 double Sin(double x);
 double Cos(double x);
