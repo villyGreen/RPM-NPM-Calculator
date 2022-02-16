@@ -290,7 +290,7 @@ double calculator (char * searchString, int point, charactersSet * set, int x_co
             break;
         }
     }
-    g_print("resultat  =  %lf\n", peek(&stack_n).value);
+//    g_print("resultat  =  %lf\n", peek(&stack_n).value);
     return  !res ? peek(&stack_n).value : 0.0;
 }
 

@@ -52,8 +52,8 @@ void init(int argc, char *argv[]) {
             startX = 10;
         }
         if (i == 2) {
-             g_signal_connect(G_OBJECT(numberButtons[2]), "clicked", G_CALLBACK(xButtonPressed), NULL);
-                setupConstraints(startX,startY,numberButtons[i],fixed);
+            g_signal_connect(G_OBJECT(numberButtons[2]), "clicked", G_CALLBACK(xButtonPressed), NULL);
+            setupConstraints(startX,startY,numberButtons[i],fixed);
         } else {
             setupNumberButtonsTarget(numberButtons[i]);
             setupConstraints(startX,startY,numberButtons[i],fixed);
@@ -122,7 +122,7 @@ void init(int argc, char *argv[]) {
     gtk_widget_set_size_request(mainLabel, 558, 95);
     gtk_widget_set_name(mainLabel, "mainLabel");
     gtk_widget_show_all(GTK_WIDGET(window));
-      gtk_widget_set_sensitive(graphButton,false);
+    gtk_widget_set_sensitive(graphButton,false);
     gtk_main();
 }
 
@@ -206,29 +206,29 @@ void modButtonClicked(GtkWidget * button) {
 
 
 void xButtonPressed(GtkWidget * button) {
-     gtk_widget_set_sensitive(graphButton,true);
+    gtk_widget_set_sensitive(graphButton,true);
     gtk_widget_set_sensitive(equalButton,false);
     char value[1000];
-       char num = ' ';
-       if (point != 0) {
-           num = searchString[point - 1];
-       }
+    char num = ' ';
+    if (point != 0) {
+        num = searchString[point - 1];
+    }
     if ((num >= '0' && num <= '9') || num == ')') {
-           value[0] = '*';
-           size_t size = strlen((gtk_button_get_label((GtkButton*)button)));
-           for (int i = 0;i < size;i++) {
-               value[i + 1] = (gtk_button_get_label((GtkButton*)button))[i];
-           }
-           value[size + 1] = '\0';
-       } else {
-           size_t size = strlen((gtk_button_get_label((GtkButton*)button)));
-           for (int i = 0;i < size;i++) {
-               value[i] = (gtk_button_get_label((GtkButton*)button))[i];
-           }
-           value[size] = '\0';
-       }
-       fillString(value,&point);
-       updateLabel(mainLabel, searchString);
+        value[0] = '*';
+        size_t size = strlen((gtk_button_get_label((GtkButton*)button)));
+        for (int i = 0;i < size;i++) {
+            value[i + 1] = (gtk_button_get_label((GtkButton*)button))[i];
+        }
+        value[size + 1] = '\0';
+    } else {
+        size_t size = strlen((gtk_button_get_label((GtkButton*)button)));
+        for (int i = 0;i < size;i++) {
+            value[i] = (gtk_button_get_label((GtkButton*)button))[i];
+        }
+        value[size] = '\0';
+    }
+    fillString(value,&point);
+    updateLabel(mainLabel, searchString);
 }
 
 void buttonNumberClicked(GtkWidget * button) {
@@ -242,9 +242,12 @@ void setGraph(GtkWidget * button) {
     charactersSet set;
     
     for (int i = 0;i < 1000;i++) {
-    calculator(searchString,point,&set,i);
+        glob.coordy[i] = calculator(searchString,point,&set,i);
+        glob.coordx[i] = i;
+            g_print(" x = %lf\n",glob.coordx[i]);
+            g_print(" y = %lf\n",glob.coordy[i]);
     }
-    drawGraph();
+        drawGraph();
 }
 
 void specButtonClicked(GtkWidget * button) {
@@ -318,7 +321,7 @@ void clearAllSearchString()  {
     point = 0;
     updateLabel(mainLabel,searchString);
     gtk_widget_set_sensitive(equalButton,true);
-     gtk_widget_set_sensitive(graphButton,false);
+    gtk_widget_set_sensitive(graphButton,false);
 }
 
 void fillString(const char * input, int *point) {
@@ -360,14 +363,13 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
 static void do_drawing_graph(cairo_t *cr) {
     cairo_set_source_rgb(cr, 4, 0, 0);
     cairo_set_line_width(cr, 1.3);
-    
-    cairo_move_to(cr, 30, 401.000000);
-    cairo_line_to(cr, 31,412.960170);
-    cairo_line_to(cr, 32,420.960170);
-    cairo_line_to(cr, 33,430.960170);
-    cairo_line_to(cr, 34,440.960170);
-    cairo_line_to(cr, 40,450.960170);
-      cairo_line_to(cr, 300,100.960170);
+    cairo_move_to(cr, glob.coordx[500], 375);
+    double y = 0.5;
+    for (int i = 1; i < 1000;i++) {
+        cairo_line_to(cr, glob.coordx[i],y);
+        y+= 0.5;
+    }
+
     glob.count = 0;
     
     cairo_stroke(cr);
