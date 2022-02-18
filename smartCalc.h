@@ -43,7 +43,6 @@ typedef struct Stack_tag {
     size_t size;
 } Stack_t;
 
-
 // Model
 charactersSet validator(char * searhString, int point);
 double calculator (char * searchString, int point, charactersSet * set, double x_coordinate);

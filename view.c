@@ -126,7 +126,7 @@ void init(int argc, char *argv[]) {
     gtk_widget_set_name(mainLabel, "mainLabel");
     gtk_widget_show_all(GTK_WIDGET(window));
     gtk_widget_set_sensitive(graphButton,false);
-    glob.range = 10;
+    glob.range = 50;
     gtk_main();
 }
 
@@ -244,16 +244,30 @@ void buttonNumberClicked(GtkWidget * button) {
 
 void setGraph(GtkWidget * button) {
     int p = 0;
+    int error = 0;
     charactersSet set;
     size_t sizeOfyArray = 0;
     glob.numbersOfDots = 2001;
     
-    for (double i = - glob.range;i <= glob.range;i += (glob.range * 2.0) / (glob.numbersOfDots - 1.0)) {
-        glob.coordx[p] = i;
-        glob.coordy[p] = calculator(searchString,point,&set,i);
-        p++;
+    set = validator(searchString, point);
+    
+    if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
+        gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
+    } else {
+        for (double i = - glob.range;i <= glob.range;i += (glob.range * 2.0) / (glob.numbersOfDots - 1.0)) {
+            glob.coordx[p] = i;
+            glob.coordy[p] = calculator(searchString,point,&set,i);
+            if (set.errors == IS_ERROR_VALUE) {
+                error = 1;
+                gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
+                break;
+            }
+            p++;
+        }
+        if (!error) {
+            drawGraph();
+        }
     }
-    drawGraph();
 }
 
 void specButtonClicked(GtkWidget * button) {
@@ -284,7 +298,7 @@ void specButtonClicked(GtkWidget * button) {
 
 void buttonSignClicked(GtkWidget * button) {
     
-    char * ch = gtk_button_get_label((GtkButton*)button);
+    const char * ch = gtk_button_get_label((GtkButton*)button);
     
     if ( ch[0] == '(') {
         char value[1000];
@@ -339,13 +353,13 @@ void fillString(const char * input, int *point) {
 
 void rangePlus(GtkWidget * button) {
     gtk_widget_destroy (windowGraph);
-    glob.range *= 5.0;
+    glob.range *= 2.0;
     setGraph(button);
 }
 
 void rangeMinus(GtkWidget * button) {
     gtk_widget_destroy (windowGraph);
-    glob.range /= 5.0;
+    glob.range /= 2.0;
     setGraph(button);
 }
 

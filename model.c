@@ -1,7 +1,6 @@
 #include "smartCalc.h"
 
 charactersSet set;
-
 charactersSet validator(char * searhString, int point) {
     set.errors = IS_NORMAL;
     set.openBracket = 0;
@@ -18,7 +17,7 @@ charactersSet validator(char * searhString, int point) {
         set.errors = IS_SYNTAX_ERROR;
     }
     if (searhString[point - 1] == 'x') {
-        set.x == 1;
+        set.x = 1;
     }
     if (searhString[point - 1] == '+' || searhString[point - 1] == '-' || searhString[point - 1] == '*'
         || searhString[point] == '/' || searhString[point - 1] == '^' || searhString[point - 1] == '(')  {

@@ -8,7 +8,6 @@ calc:
 clean:
 	rm -f *.o calc
 
-rebuild: clean all
 
 
 
