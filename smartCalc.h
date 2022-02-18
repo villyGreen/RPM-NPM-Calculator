@@ -12,7 +12,7 @@
 
 #define NMAX 100
 
-#define STACK_MAX_SIZE 1000
+#define STACK_MAX_SIZE 256
 #define STACK_OVERFLOW  -100
 #define STACK_UNDERFLOW -101
 
@@ -46,7 +46,7 @@ typedef struct Stack_tag {
 
 // Model
 charactersSet validator(char * searhString, int point);
-double calculator (char * searchString, int point, charactersSet * set);
+double calculator (char * searchString, int point, charactersSet * set, double x_coordinate);
 bool isValue(char  ch);
 bool isFractionValue(char ch);
 void push(Stack_t *stack, value_type value);
@@ -56,6 +56,9 @@ size_t stackIsEmpty(const Stack_t *stack);
 size_t sizeOfStack(const Stack_t * stack);
 bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,charactersSet * set);
 int getPriority(char ch);
+double Sin(double x);
+double Cos(double x);
+
 
 // View
 void init(int argc, char *argv[]);
@@ -77,8 +80,13 @@ void equalButtonClicked();
 void setGraph(GtkWidget * button);
 void myCSS(void);
 void drawGraph();
+void xButtonPressed(GtkWidget * button);
+void modButtonClicked(GtkWidget * button);
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, 
-    gpointer user_data);
-    static void do_drawing(cairo_t *cr);
+                              gpointer user_data);
+static void do_drawing_graph(cairo_t *cr);
+static void do_drawing(cairo_t *cr);
+void rangePlus(GtkWidget * button);
+void rangeMinus(GtkWidget * button);
 
 #endif  // SRC_S21_SMARTCALC_H_
