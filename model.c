@@ -126,7 +126,6 @@ bool isFractionValue(char ch) {
 }
 
 double calculator (char * searchString, int point, charactersSet * set, double x_coordinate) {
-    
     Stack_t stack_n;
     stack_n.size = 0;
     Stack_t stack_o;
@@ -148,9 +147,9 @@ double calculator (char * searchString, int point, charactersSet * set, double x
         }
         while ((searchString[i] >= '0' && searchString[i] <= '9' || searchString[i] == '-' && flag == 1) || searchString[i] == ',') {
             ch = searchString[i];
-            //                       if (ch == ',') {
-            //                           ch = '.';
-            //                       }
+                                   if (ch == ',') {
+                                       ch = '.';
+                                   }
             value[pointer] = ch;
             flag = 0;
             matchValue = 1;
@@ -158,15 +157,11 @@ double calculator (char * searchString, int point, charactersSet * set, double x
             i++;
         }
         if (matchValue) {
-            value[pointer + 1] = '\0';
-            
+            value[pointer] = '\0';
             sscanf(value,"%lf",&value_d);
             item.type = '0';
             item.value = value_d;
             push(&stack_n, item);
-            for (int i = 0; i < pointer;i++) {
-                value[i] = '\0';
-            }
             pointer = 0;
         }
         if (searchString[i] == 's' || searchString[i] == 'c' || searchString[i] == 'a' || searchString[i] == 'l' || searchString[i] == 't') {
@@ -287,8 +282,7 @@ double calculator (char * searchString, int point, charactersSet * set, double x
             break;
         }
     }
-    //    g_print("resultat  =  %lf\n", peek(&stack_n).value);
-    return  !res ? peek(&stack_n).value : 0.0;
+    return  !res ? pop(&stack_n).value : 0.0;
 }
 
 bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,charactersSet * set) {
@@ -359,14 +353,14 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             }
             break;
         case 's':
-            value_res = sin(value_a);
+            value_res = sinl(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
             pop(stack_o);
             break;
         case 'c':
-            value_res = Cos(value_a);
+            value_res = cosl(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
@@ -378,14 +372,14 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
                 set->errors = IS_ERROR_VALUE;
                 break;
             }
-            value_res = tan(value_a);
+            value_res = tanl(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
             pop(stack_o);
             break;
         case 'l':
-            value_res = log10(value_a);
+            value_res = log10l(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
@@ -398,7 +392,7 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
                 break;
             }
             value_b = peek(stack_n).value;
-            value_res = fmod(value_b,value_a);
+            value_res = fmodl(value_b,value_a);
             item.type = '0';
             item.value = value_res;
             pop(stack_n);
@@ -406,7 +400,7 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             pop(stack_o);
             break;
         case 'L':
-            value_res = log(value_a);
+            value_res = logl(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
@@ -414,7 +408,7 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             break;
         case 'C':
             if (value_a >= -1 && value_a <= 1) {
-                value_res = acos(value_a);
+                value_res = acosl(value_a);
                 item.type = '0';
                 item.value = value_res;
                 push(stack_n, item);
@@ -426,7 +420,7 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             break;
         case 'S':
             if (value_a >= -1 && value_a <= 1) {
-                value_res = asin(value_a);
+                value_res = asinl(value_a);
                 item.type = '0';
                 item.value = value_res;
                 push(stack_n, item);
@@ -437,7 +431,7 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             }
             break;
         case 'T':
-            value_res = atan(value_a);
+            value_res = atanl(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);
@@ -445,7 +439,7 @@ bool mathStackElements(Stack_t *stack_n, Stack_t *stack_o,value_type  item,chara
             
             break;
         case 'Q':
-            value_res = sqrt(value_a);
+            value_res = sqrtl(value_a);
             item.type = '0';
             item.value = value_res;
             push(stack_n, item);

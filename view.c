@@ -191,6 +191,7 @@ void equalButtonClicked() {
         gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
     } else {
         res = calculator(searchString,point,&set,0);
+        g_print(" res = %lf\n",res);
         if (set.errors == IS_ERROR_VALUE) {
             gtk_label_set_label((GtkLabel*)mainLabel, "Ошибка");
         } else {
