@@ -2,7 +2,7 @@ CFLAGS = -Wall -Werror -Wextra
 all: clean calc
 
 calc:
-	gcc view.c controller.c model.c -o calc `pkg-config --cflags --libs gtk+-3.0`
+	gcc view.c controller.c model.c  `pkg-config --cflags --libs gtk+-3.0` -o calc
 	./calc
 test:
 	gcc test.c view.c model.c   -lcheck `pkg-config --cflags --libs gtk+-3.0`  -o Test
@@ -15,16 +15,25 @@ gcov_report:
 	gcov test.gcda
 	lcov -t "calc" -o calc.info -c -d .
 	genhtml -o report calc.info
-	
+
+install:
+	gcc view.c controller.c model.c  `pkg-config --cflags --libs gtk+-3.0` -o calc
+	mkdir -p app
+	install ./calc app
+	install mystyle.css ~/
+
+uninstall:
+	rm -rf app
+	rm calc
+
+dvi:
+	open documentation.html
 
 clean:
-	rm -f *.o Test *.out *.gcov *.gcda *.gcno *.info *.a
+	rm -f *.o Test calc *.out *.gcov *.gcda *.gcno *.info *.a
 	rm -rf ./report
+	rm -rf app
 check:
+	cppcheck *.h *.c
 	CK_FORK=no leaks --atExit -- ./Test
-
-rebuild: clean all
-
-
-
 
