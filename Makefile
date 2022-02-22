@@ -29,11 +29,15 @@ uninstall:
 dvi:
 	open documentation.html
 
+dist: install clean
+	tar -czf SmartCalc.tgz ./*
+
 clean:
 	rm -f *.o Test calc *.out *.gcov *.gcda *.gcno *.info *.a
 	rm -rf ./report
 	rm -rf app
 check:
-	cppcheck *.h *.c
+	gcc test.c view.c model.c   -lcheck `pkg-config --cflags --libs gtk+-3.0`  -o Test
 	CK_FORK=no leaks --atExit -- ./Test
+	rm -f *.o Test
 
