@@ -25,7 +25,7 @@ a {
 
 
 p {
-    color: gray;
+    color: white;
     font-size: 1.7rem;
     margin-top: 5px;
     line-height: 2.8rem;
@@ -136,7 +136,7 @@ p {
     align-items: flex-start;
     justify-content: center;
     flex-direction: column;
-    background-image: linear-gradient(60deg, #29323c 0%, #631532 100%);
+    background-image: linear-gradient(60deg, #241572 0%, #631532 100%);
     color: white;
 }
 
