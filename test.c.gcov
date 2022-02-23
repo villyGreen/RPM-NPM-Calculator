@@ -1,0 +1,212 @@
+        -:    0:Source:test.c
+        -:    0:Graph:test.gcno
+        -:    0:Data:test.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <check.h>
+        -:    2:#include "smartCalc.h"
+        -:    3:#include <string.h>
+        -:    4:#include <math.h>
+        -:    5:
+        1:    6:START_TEST(test_calc_1) {
+        -:    7:    charactersSet set;
+        1:    8:    char * searchString = "43 + 2 + 6 * 3245/5";
+        1:    9:    double res = calculator(searchString,strlen(searchString),&set,0);
+        1:   10:    double origin_res = 43 + 2 + 6 * 3245/5;
+        1:   11:    ck_assert_double_eq(origin_res, res);
+        1:   12:}
+        -:   13:END_TEST
+        -:   14:
+        -:   15:
+        1:   16:START_TEST(test_calc_2) {
+        -:   17:    charactersSet set;
+        1:   18:    char * searchString = "12^3*321,1";
+        1:   19:    double res = calculator(searchString,strlen(searchString),&set,0);
+        1:   20:    double origin_res = pow(12,3) * 321.1;
+        1:   21:    ck_assert_double_eq(origin_res, res);
+        1:   22:}
+        -:   23:END_TEST
+        -:   24:
+        1:   25:START_TEST(test_calc_3) {
+        -:   26:    charactersSet set;
+        1:   27:    char * searchString = "cos(5 * 11 * sin(tan(5)))";
+        1:   28:    double res = calculator(searchString,strlen(searchString),&set,0);
+        1:   29:    double origin_res = cosl(5 * 11 * sinl(tan(5)));
+        1:   30:    ck_assert_float_eq(origin_res, res);
+        1:   31:}
+        -:   32:END_TEST
+        -:   33:
+        1:   34:START_TEST(test_calc_4) {
+        -:   35:    charactersSet set;
+        1:   36:    char * searchString = "sqrt(99*4*cos(5))";
+        1:   37:    double res = calculator(searchString,strlen(searchString),&set,0);
+        1:   38:    double origin_res = sqrtl(99 * 4 * cos(5));
+        1:   39:    ck_assert_double_eq(origin_res, res);
+        1:   40:}
+        -:   41:END_TEST
+        -:   42:
+        1:   43:START_TEST(test_calc_5) {
+        -:   44:    charactersSet set;
+        1:   45:    char * searchString = "acos(0,5)*asin(1)*atan(2)";
+        1:   46:    double res = calculator(searchString,strlen(searchString),&set,0);
+        1:   47:    double origin_res = acosl(0.5) * asinl(1) * atanl(2);
+        -:   48:    
+        1:   49:    ck_assert_double_eq(origin_res, res);
+        1:   50:}
+        -:   51:END_TEST
+        -:   52:
+        1:   53:START_TEST(test_calc_6) {
+        -:   54:    charactersSet set;
+        1:   55:    double res = 0;
+        1:   56:    char * searchString = "acos(,)*asin(1)*atan(2)";
+        1:   57:    set =  validator(searchString,strlen(searchString));
+        1:   58:    if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
+        1:   59:        res = 0;
+        1:   60:    } else {
+    #####:   61:        res = calculator(searchString,strlen(searchString),&set,0);
+        -:   62:    }
+        -:   63:    
+        1:   64:    double origin_res = 0;
+        1:   65:    ck_assert_double_eq(origin_res, res);
+        1:   66:}
+        -:   67:END_TEST
+        -:   68:
+        1:   69:START_TEST(test_calc_7) {
+        -:   70:    charactersSet set;
+        1:   71:    double res = 0;
+        1:   72:    char * searchString = "123-098.11--09++()";
+        1:   73:    set =  validator(searchString,strlen(searchString));
+        1:   74:    if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
+        1:   75:        res = 0;
+        1:   76:    } else {
+    #####:   77:        res = calculator(searchString,strlen(searchString),&set,0);
+        -:   78:    }
+        -:   79:    
+        1:   80:    double origin_res = 0;
+        1:   81:    ck_assert_double_eq(origin_res, res);
+        1:   82:}
+        -:   83:END_TEST
+        -:   84:
+        1:   85:START_TEST(test_calc_8) {
+        -:   86:    charactersSet set;
+        1:   87:    double res = 0;
+        1:   88:    char * searchString = "321";
+        1:   89:    set =  validator(searchString,strlen(searchString));
+        1:   90:    if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
+        1:   91:        res = 0;
+        1:   92:    } else {
+    #####:   93:        res = calculator(searchString,strlen(searchString),&set,0);
+        -:   94:    }
+        -:   95:    
+        1:   96:    double origin_res = 0;
+        1:   97:    ck_assert_double_eq(origin_res, res);
+        1:   98:}
+        -:   99:END_TEST
+        -:  100:
+        1:  101:START_TEST(test_calc_9) {
+        -:  102:    charactersSet set;
+        1:  103:    double res = 0;
+        1:  104:    char * searchString = "sin(1 * cos(4)";
+        1:  105:    set =  validator(searchString,strlen(searchString));
+        1:  106:    if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
+        1:  107:        res = 0;
+        1:  108:    } else {
+    #####:  109:        res = calculator(searchString,strlen(searchString),&set,0);
+        -:  110:    }
+        -:  111:    
+        1:  112:    double origin_res = 0;
+        1:  113:    ck_assert_double_eq(origin_res, res);
+        1:  114:}
+        -:  115:END_TEST
+        -:  116:
+        1:  117:START_TEST(test_calc_10) {
+        -:  118:    charactersSet set;
+        1:  119:    double res = 0;
+        1:  120:    char * searchString = "^12 * 123";
+        1:  121:    set =  validator(searchString,strlen(searchString));
+        1:  122:    if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
+        1:  123:        res = 0;
+        1:  124:    } else {
+    #####:  125:        res = calculator(searchString,strlen(searchString),&set,0);
+        -:  126:    }
+        -:  127:    
+        1:  128:    double origin_res = 0;
+        1:  129:    ck_assert_double_eq(origin_res, res);
+        1:  130:}
+        -:  131:END_TEST
+        -:  132:
+        1:  133:START_TEST(test_calc_11) {
+        -:  134:    charactersSet set;
+        1:  135:    double res = 0;
+        1:  136:    char * searchString = "x";
+        1:  137:    set =  validator(searchString,strlen(searchString));
+        1:  138:    if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
+        1:  139:        res = 0;
+        1:  140:    } else {
+    #####:  141:        res = calculator(searchString,strlen(searchString),&set,0);
+        -:  142:    }
+        -:  143:    
+        1:  144:    double origin_res = 0;
+        1:  145:    ck_assert_double_eq(origin_res, res);
+        1:  146:}
+        -:  147:END_TEST
+        -:  148:
+        1:  149:START_TEST(test_calc_12) {
+        -:  150:    charactersSet set;
+        1:  151:    double res = 0;
+        1:  152:    char * searchString = "mod";
+        1:  153:    set =  validator(searchString,strlen(searchString));
+        1:  154:    if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
+        1:  155:        res = 0;
+        1:  156:    } else {
+    #####:  157:        res = calculator(searchString,strlen(searchString),&set,0);
+        -:  158:    }
+        -:  159:    
+        1:  160:    double origin_res = 0;
+        1:  161:    ck_assert_double_eq(origin_res, res);
+        1:  162:}
+        -:  163:END_TEST
+        -:  164:
+        1:  165:START_TEST(test_calc_13) {
+        -:  166:    charactersSet set;
+        1:  167:    double res = 0;
+        1:  168:    char * searchString = "123.2-";
+        1:  169:    set =  validator(searchString,strlen(searchString));
+        1:  170:    if (set.errors == IS_EMPTY_FEEL || set.errors == IS_SYNTAX_ERROR) {
+        1:  171:        res = 0;
+        1:  172:    } else {
+    #####:  173:        res = calculator(searchString,strlen(searchString),&set,0);
+        -:  174:    }
+        -:  175:    
+        1:  176:    double origin_res = 0;
+        1:  177:    ck_assert_double_eq(origin_res, res);
+        1:  178:}
+        -:  179:END_TEST
+        -:  180:
+       14:  181:int main(void) {
+       14:  182:    Suite *s1 = suite_create("Calculate_Operations");
+       14:  183:    SRunner *sr = srunner_create(s1);
+        -:  184:    int nf;
+        -:  185:    
+       14:  186:    TCase *tc1_1 = tcase_create("Calculate_Operations");
+       14:  187:    suite_add_tcase(s1, tc1_1);
+       14:  188:    tcase_add_test(tc1_1, test_calc_1);
+       14:  189:    tcase_add_test(tc1_1, test_calc_2);
+       14:  190:    tcase_add_test(tc1_1, test_calc_3);
+       14:  191:    tcase_add_test(tc1_1, test_calc_4);
+       14:  192:    tcase_add_test(tc1_1, test_calc_5);
+       14:  193:    tcase_add_test(tc1_1, test_calc_6);
+       14:  194:    tcase_add_test(tc1_1, test_calc_7);
+       14:  195:    tcase_add_test(tc1_1, test_calc_8);
+       14:  196:    tcase_add_test(tc1_1, test_calc_9);
+       14:  197:    tcase_add_test(tc1_1, test_calc_10);
+       14:  198:    tcase_add_test(tc1_1, test_calc_11);
+       14:  199:    tcase_add_test(tc1_1, test_calc_12);
+       14:  200:    tcase_add_test(tc1_1, test_calc_13);
+        -:  201:    
+       14:  202:    srunner_run_all(sr, CK_ENV);
+       14:  203:    nf = srunner_ntests_failed(sr);
+       14:  204:    srunner_free(sr);
+        -:  205:    
+       14:  206:    return nf == 0 ? 0 : 1;
+        -:  207:}
